@@ -1,9 +1,9 @@
 /*
 	dfs
 	This problem requires you to implement a basic DFS traversal
+    深度优先搜索
 */
 
-// I AM NOT DONE
 use std::collections::HashSet;
 
 struct Graph {
@@ -23,13 +23,27 @@ impl Graph {
     }
 
     fn dfs_util(&self, v: usize, visited: &mut HashSet<usize>, visit_order: &mut Vec<usize>) {
-        //TODO
+        // 将当前节点标记为已访问
+        visited.insert(v);
+        // 将当前节点添加到访问顺序中
+        visit_order.push(v);
+
+        // 遍历当前节点的所有邻居节点
+        for &neighbor in &self.adj[v] {
+            // 如果邻居节点未被访问，则递归调用dfs_util
+            if !visited.contains(&neighbor) {
+                self.dfs_util(neighbor, visited, visit_order);
+            }
+        }
     }
 
     // Perform a depth-first search on the graph, return the order of visited nodes
     fn dfs(&self, start: usize) -> Vec<usize> {
+        // 创建一个HashSet来跟踪已访问的节点
         let mut visited = HashSet::new();
+        // 创建一个Vec来存储访问顺序
         let mut visit_order = Vec::new(); 
+        // 调用dfs_util函数进行深度优先搜索
         self.dfs_util(start, &mut visited, &mut visit_order);
         visit_order
     }

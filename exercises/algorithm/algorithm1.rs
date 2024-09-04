@@ -1,8 +1,8 @@
 /*
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
+    单链表合并
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -70,13 +70,40 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    where
+        T: std::cmp::PartialOrd + Clone,
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+        // 定义一个空合并链表 和 a 链表与 b 链表指向各自起始 node 的指针
+		let mut merge_link_list = LinkedList::new();
+        let mut a_ptr = list_a.start;
+        let mut b_ptr = list_b.start;
+
+        // 当两个指针都非空时，循环对比大小，小的放入合并链表，然后更新小的链表的指针指向下一个 node
+        while a_ptr.is_some() && b_ptr.is_some() {
+            let a_node = unsafe { &*a_ptr.unwrap().as_ptr() };
+            let b_node = unsafe { &*b_ptr.unwrap().as_ptr() };
+
+            if a_node.val < b_node.val {
+                merge_link_list.add(a_node.val.clone());
+                a_ptr = a_node.next;
+            } else {
+                merge_link_list.add(b_node.val.clone());
+                b_ptr = b_node.next;
+            }
         }
+
+        // 当有一方链表的指针为空了之后，只需要再把另外链表剩下的值加入到合并链表中
+        while a_ptr.is_some() {
+            let a_node = unsafe { &*a_ptr.unwrap().as_ptr() };
+            merge_link_list.add(a_node.val.clone());
+            a_ptr = a_node.next;
+        }
+        while b_ptr.is_some() {
+            let b_node = unsafe { &*b_ptr.unwrap().as_ptr() };
+            merge_link_list.add(b_node.val.clone());
+            b_ptr = b_node.next;
+        }
+        return merge_link_list;
 	}
 }
 

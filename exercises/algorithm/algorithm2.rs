@@ -1,8 +1,8 @@
 /*
 	double linked list reverse
 	This problem requires you to reverse a doubly linked list
+    双向链表反转
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -73,7 +73,29 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn reverse(&mut self){
-		// TODO
+		// 1 、判断链表长度，如果小于等于 1 则无需反转。
+        if self.length <= 1 {
+            return;
+        }
+        
+        // 2 、交换起始结束指针，改变链表方向
+        let temp = self.start;
+        self.start = self.end;
+        self.end = temp;
+
+        // 3、遍历链表，交换每个node 的 prev 和 next 指针
+        let mut curr = self.start;
+        while curr.is_some() {
+            let curr_ptr = curr.unwrap();
+            let curr_node = unsafe { &mut *curr_ptr.as_ptr() };
+
+            // 交换
+            let temp = curr_node.prev;
+            curr_node.prev = curr_node.next;
+            curr_node.next = temp;
+
+            curr = curr_node.next;
+        }
 	}
 }
 
